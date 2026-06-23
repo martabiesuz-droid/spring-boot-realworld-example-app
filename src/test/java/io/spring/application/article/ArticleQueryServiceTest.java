@@ -15,10 +15,6 @@ import io.spring.core.favorite.ArticleFavoriteRepository;
 import io.spring.core.user.FollowRelation;
 import io.spring.core.user.User;
 import io.spring.core.user.UserRepository;
-import io.spring.infrastructure.DbTestBase;
-import io.spring.infrastructure.repository.MyBatisArticleFavoriteRepository;
-import io.spring.infrastructure.repository.MyBatisArticleRepository;
-import io.spring.infrastructure.repository.MyBatisUserRepository;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Optional;
@@ -26,15 +22,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-@Import({
-  ArticleQueryService.class,
-  MyBatisUserRepository.class,
-  MyBatisArticleRepository.class,
-  MyBatisArticleFavoriteRepository.class
-})
-public class ArticleQueryServiceTest extends DbTestBase {
+@ActiveProfiles("test")
+@SpringBootTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
+public class ArticleQueryServiceTest {
   @Autowired private ArticleQueryService queryService;
 
   @Autowired private ArticleRepository articleRepository;

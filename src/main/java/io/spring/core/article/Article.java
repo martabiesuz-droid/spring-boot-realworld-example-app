@@ -3,6 +3,15 @@ package io.spring.core.article;
 import static java.util.stream.Collectors.toList;
 
 import io.spring.Util;
+import io.spring.core.AbstractPersistableEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
@@ -11,18 +20,33 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Entity
+@Table(name = "articles")
 @Getter
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-public class Article {
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
+public class Article extends AbstractPersistableEntity {
+
+  @Column(name = "user_id")
   private String userId;
-  private String id;
+
+  @Id private String id;
   private String slug;
   private String title;
   private String description;
   private String body;
+
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(
+      name = "article_tags",
+      joinColumns = @JoinColumn(name = "article_id"),
+      inverseJoinColumns = @JoinColumn(name = "tag_id"))
   private List<Tag> tags;
+
+  @Column(name = "created_at")
   private Instant createdAt;
+
+  @Column(name = "updated_at")
   private Instant updatedAt;
 
   public Article(

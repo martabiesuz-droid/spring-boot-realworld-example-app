@@ -1,16 +1,23 @@
 package io.spring.core.user;
 
 import io.spring.Util;
+import io.spring.core.AbstractPersistableEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Entity
+@Table(name = "users")
 @Getter
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-public class User {
-  private String id;
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
+public class User extends AbstractPersistableEntity {
+
+  @Id private String id;
   private String email;
   private String username;
   private String password;

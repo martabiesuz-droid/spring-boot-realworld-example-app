@@ -1,19 +1,33 @@
 package io.spring.core.comment;
 
+import io.spring.core.AbstractPersistableEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Entity
+@Table(name = "comments")
 @Getter
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
-public class Comment {
-  private String id;
+@EqualsAndHashCode(of = "id", callSuper = false)
+public class Comment extends AbstractPersistableEntity {
+
+  @Id private String id;
   private String body;
-  private String userId;
+
+  @Column(name = "article_id")
   private String articleId;
+
+  @Column(name = "user_id")
+  private String userId;
+
+  @Column(name = "created_at")
   private Instant createdAt;
 
   public Comment(String body, String userId, String articleId) {

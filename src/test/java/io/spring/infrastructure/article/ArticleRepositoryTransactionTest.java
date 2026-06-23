@@ -4,7 +4,7 @@ import io.spring.core.article.Article;
 import io.spring.core.article.ArticleRepository;
 import io.spring.core.user.User;
 import io.spring.core.user.UserRepository;
-import io.spring.infrastructure.mybatis.mapper.ArticleMapper;
+import io.spring.infrastructure.jpa.repository.TagJpaRepository;
 import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,11 +17,12 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ArticleRepositoryTransactionTest {
+
   @Autowired private ArticleRepository articleRepository;
 
   @Autowired private UserRepository userRepository;
 
-  @Autowired private ArticleMapper articleMapper;
+  @Autowired private TagJpaRepository tagJpaRepository;
 
   @Test
   public void transactional_test() {
@@ -35,7 +36,7 @@ public class ArticleRepositoryTransactionTest {
     try {
       articleRepository.save(anotherArticle);
     } catch (Exception e) {
-      Assertions.assertNull(articleMapper.findTag("other"));
+      Assertions.assertTrue(tagJpaRepository.findByName("other").isEmpty());
     }
   }
 }
