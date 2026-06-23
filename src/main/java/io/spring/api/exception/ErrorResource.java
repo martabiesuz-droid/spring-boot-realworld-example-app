@@ -1,18 +1,22 @@
 package io.spring.api.exception;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@JsonSerialize(using = ErrorResourceSerializer.class)
-@JsonIgnoreProperties(ignoreUnknown = true)
-@lombok.Getter
-@JsonRootName("errors")
 public class ErrorResource {
-  private List<FieldErrorResource> fieldErrors;
+  private Map<String, List<String>> errors;
 
-  public ErrorResource(List<FieldErrorResource> fieldErrorResources) {
-    this.fieldErrors = fieldErrorResources;
+  public ErrorResource(List<FieldErrorResource> fieldErrors) {
+    this.errors = new HashMap<>();
+    for (FieldErrorResource fieldError : fieldErrors) {
+      errors.computeIfAbsent(fieldError.getField(), key -> new ArrayList<>())
+          .add(fieldError.getMessage());
+    }
+  }
+
+  public Map<String, List<String>> getErrors() {
+    return errors;
   }
 }

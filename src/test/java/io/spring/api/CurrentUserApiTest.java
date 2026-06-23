@@ -18,26 +18,22 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.validation.autoconfigure.ValidationAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(CurrentUserApi.class)
-@Import({
-  WebSecurityConfig.class,
-  JacksonCustomizations.class,
-  UserService.class,
-  ValidationAutoConfiguration.class,
-  BCryptPasswordEncoder.class
-})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
+@Import({WebSecurityConfig.class, JacksonCustomizations.class})
 public class CurrentUserApiTest extends TestWithCurrentUser {
 
   @Autowired private MockMvc mvc;
 
-  @MockBean private UserQueryService userQueryService;
+  @MockitoBean private UserQueryService userQueryService;
 
   @Override
   @BeforeEach
