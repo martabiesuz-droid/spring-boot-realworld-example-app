@@ -24,15 +24,16 @@ public class MyBatisUserRepositoryTest {
 
   @BeforeEach
   public void setUp() {
-    user = new User("aisensiy@163.com", "aisensiy", "123", "", "default");
+    String uniq = String.valueOf(System.nanoTime());
+    user = new User("aisensiy" + uniq + "@163.com", "aisensiy" + uniq, "123", "", "default");
   }
 
   @Test
   public void should_save_and_fetch_user_success() {
     userRepository.save(user);
-    Optional<User> userOptional = userRepository.findByUsername("aisensiy");
+    Optional<User> userOptional = userRepository.findByUsername(user.getUsername());
     Assertions.assertEquals(userOptional.get(), user);
-    Optional<User> userOptional2 = userRepository.findByEmail("aisensiy@163.com");
+    Optional<User> userOptional2 = userRepository.findByEmail(user.getEmail());
     Assertions.assertEquals(userOptional2.get(), user);
   }
 
@@ -56,7 +57,7 @@ public class MyBatisUserRepositoryTest {
 
   @Test
   public void should_create_new_user_follow_success() {
-    User other = new User("other@example.com", "other", "123", "", "");
+    User other = new User("other" + System.nanoTime() + "@example.com", "other" + System.nanoTime(), "123", "", "");
     userRepository.save(other);
 
     FollowRelation followRelation = new FollowRelation(user.getId(), other.getId());
@@ -66,7 +67,7 @@ public class MyBatisUserRepositoryTest {
 
   @Test
   public void should_unfollow_user_success() {
-    User other = new User("other@example.com", "other", "123", "", "");
+    User other = new User("other" + System.nanoTime() + "@example.com", "other" + System.nanoTime(), "123", "", "");
     userRepository.save(other);
 
     FollowRelation followRelation = new FollowRelation(user.getId(), other.getId());

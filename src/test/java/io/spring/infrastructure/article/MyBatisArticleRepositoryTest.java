@@ -30,9 +30,10 @@ public class MyBatisArticleRepositoryTest {
 
   @BeforeEach
   public void setUp() {
-    User user = new User("aisensiy@gmail.com", "aisensiy", "123", "bio", "default");
+    String uniq = String.valueOf(System.nanoTime());
+    User user = new User("aisensiy" + uniq + "@gmail.com", "aisensiy" + uniq, "123", "bio", "default");
     userRepository.save(user);
-    article = new Article("test", "desc", "body", Arrays.asList("java", "spring"), user.getId());
+    article = new Article("test" + uniq, "desc", "body", Arrays.asList("java", "spring"), user.getId());
   }
 
   @Test
