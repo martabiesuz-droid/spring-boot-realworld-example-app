@@ -22,6 +22,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -39,6 +42,10 @@ public class ArticleQueryServiceTest {
   @Autowired private UserRepository userRepository;
 
   @Autowired private ArticleFavoriteRepository articleFavoriteRepository;
+
+  @Autowired private JdbcTemplate jdbcTemplate;
+
+  @PersistenceContext private EntityManager entityManager;
 
   private User user;
   private Article article;
@@ -223,5 +230,27 @@ public class ArticleQueryServiceTest {
     Assertions.assertEquals(anotherUserFeed.getCount(), 1);
     ArticleData articleData = anotherUserFeed.getArticleDatas().get(0);
     Assertions.assertTrue(articleData.getProfileData().isFollowing());
+  }
+
+  @Test
+  public void should_soft_delete_article_hide_from_reads_but_keep_in_db() {
+    Assertions.assertTrue(articleRepository.findById(article.getId()).isPresent());
+
+    articleRepository.remove(article);
+    entityManager.flush();
+    entityManager.clear();
+
+    Assertions.assertFalse(articleRepository.findById(article.getId()).isPresent());
+
+    Integer total =
+        jdbcTemplate.queryForObject(
+            "select count(*) from articles where id = ?", Integer.class, article.getId());
+    Integer deleted =
+        jdbcTemplate.queryForObject(
+            "select count(*) from articles where id = ? and is_deleted = true",
+            Integer.class,
+            article.getId());
+    Assertions.assertEquals(1, total);
+    Assertions.assertEquals(1, deleted);
   }
 }

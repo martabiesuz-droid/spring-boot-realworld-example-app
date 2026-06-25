@@ -19,12 +19,16 @@ import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "articles")
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
+@SQLDelete(sql = "UPDATE articles SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 public class Article extends AbstractPersistableEntity {
 
   @Column(name = "user_id")
@@ -48,6 +52,9 @@ public class Article extends AbstractPersistableEntity {
 
   @Column(name = "updated_at")
   private Instant updatedAt;
+
+  @Column(name = "is_deleted")
+  private boolean deleted = false;
 
   public Article(
       String title, String description, String body, List<String> tagList, String userId) {

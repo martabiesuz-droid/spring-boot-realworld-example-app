@@ -15,16 +15,17 @@
 
     <select id="findById" resultMap="transfer.data.commentData">
         <include refid="selectCommentData"/>
-        where C.id = #{id}
+        where C.id = #{id} and C.is_deleted = false
     </select>
     <select id="findByArticleId" resultMap="transfer.data.commentData">
         <include refid="selectCommentData"/>
-        where C.article_id = #{articleId}
+        where C.article_id = #{articleId} and C.is_deleted = false
     </select>
     <select id="findByArticleIdWithCursor" resultMap="transfer.data.commentData">
         <include refid="selectCommentData"/>
         <where>
-        C.article_id = #{articleId}
+        C.is_deleted = false
+        AND C.article_id = #{articleId}
         <if test='page.cursor != null and page.direction.name() == "NEXT"'>
             AND C.created_at &lt; #{page.cursor}
         </if>
