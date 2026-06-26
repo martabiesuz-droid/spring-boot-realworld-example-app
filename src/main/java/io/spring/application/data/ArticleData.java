@@ -2,6 +2,7 @@ package io.spring.application.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.spring.application.DateTimeCursor;
+import io.spring.application.ReadingTime;
 import java.time.Instant;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,11 @@ public class ArticleData implements io.spring.application.Node {
 
   @JsonProperty("author")
   private ProfileData profileData;
+
+  @JsonProperty("readingTimeMinutes")
+  public int getReadingTimeMinutes() {
+    return ReadingTime.minutes(body);
+  }
 
   @Override
   public DateTimeCursor getCursor() {
