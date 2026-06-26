@@ -151,7 +151,8 @@ public class ArticleApiTest extends TestWithCurrentUser {
                 anotherUser.getUsername(),
                 anotherUser.getBio(),
                 anotherUser.getImage(),
-                false));
+                false),
+            1);
 
     when(articleRepository.findBySlug(eq(article.getSlug()))).thenReturn(Optional.of(article));
     when(articleQueryService.findBySlug(eq(article.getSlug()), eq(user)))

@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import io.spring.Util;
 import io.spring.core.AbstractPersistableEntity;
+import io.spring.application.ReadingTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -56,6 +57,9 @@ public class Article extends AbstractPersistableEntity {
   @Column(name = "is_deleted")
   private boolean deleted = false;
 
+  @Column(name = "reading_time")
+  private int readingTime;
+
   public Article(
       String title, String description, String body, List<String> tagList, String userId) {
     this(title, description, body, tagList, userId, Instant.now());
@@ -73,6 +77,7 @@ public class Article extends AbstractPersistableEntity {
     this.title = title;
     this.description = description;
     this.body = body;
+    this.readingTime = ReadingTime.minutes(body);
     this.tags = new HashSet<>(tagList).stream().map(Tag::new).collect(toList());
     this.userId = userId;
     this.createdAt = createdAt;
@@ -91,6 +96,7 @@ public class Article extends AbstractPersistableEntity {
     }
     if (!Util.isEmpty(body)) {
       this.body = body;
+      this.readingTime = ReadingTime.minutes(body);
       this.updatedAt = Instant.now();
     }
   }

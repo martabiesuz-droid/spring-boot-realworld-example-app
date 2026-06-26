@@ -253,4 +253,34 @@ public class ArticleQueryServiceTest {
     Assertions.assertEquals(1, total);
     Assertions.assertEquals(1, deleted);
   }
+
+  @Test
+  public void should_persist_reading_time_on_create() {
+    Integer readingTime = jdbcTemplate.queryForObject(
+        "select reading_time from articles where id = ?", Integer.class, article.getId());
+    Assertions.assertNotNull(readingTime);
+    Assertions.assertTrue(readingTime >= 1);
+  }
+
+  @Test
+  public void should_return_persisted_reading_time_on_read() {
+    Optional<ArticleData> optional = queryService.findById(article.getId(), user);
+    Assertions.assertTrue(optional.isPresent());
+    Integer fromDb = jdbcTemplate.queryForObject(
+        "select reading_time from articles where id = ?", Integer.class, article.getId());
+    Assertions.assertEquals(fromDb, optional.get().getReadingTime());
+  }
+
+  @Test
+  public void should_recompute_reading_time_when_body_changes() {
+    Integer before = jdbcTemplate.queryForObject(
+        "select reading_time from articles where id = ?", Integer.class, article.getId());
+    String longBody = "word ".repeat(500);
+    article.update(null, null, longBody);
+    articleRepository.save(article);
+    Integer after = jdbcTemplate.queryForObject(
+        "select reading_time from articles where id = ?", Integer.class, article.getId());
+    Assertions.assertNotEquals(before, after);
+    Assertions.assertEquals(3, after);
+  }
 }

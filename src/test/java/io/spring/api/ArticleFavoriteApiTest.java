@@ -69,7 +69,8 @@ public class ArticleFavoriteApiTest extends TestWithCurrentUser {
                 anotherUser.getUsername(),
                 anotherUser.getBio(),
                 anotherUser.getImage(),
-                false));
+                false),
+            1);
     when(articleQueryService.findBySlug(eq(articleData.getSlug()), eq(user)))
         .thenReturn(Optional.of(articleData));
   }
