@@ -1,6 +1,9 @@
 package io.spring.api;
 
 import io.spring.application.TagsQueryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.HashMap;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "tags")
 @AllArgsConstructor
+@Tag(name = "Tags")
 public class TagsApi {
   private TagsQueryService tagsQueryService;
 
+  @Operation(summary = "Get tags")
+  @ApiResponse(responseCode = "200", description = "Tags retrieved")
   @GetMapping
   public ResponseEntity getTags() {
     return ResponseEntity.ok(
