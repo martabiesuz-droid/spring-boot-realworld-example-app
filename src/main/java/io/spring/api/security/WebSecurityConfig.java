@@ -52,7 +52,9 @@ public class WebSecurityConfig {
                     .authenticated()
                     .requestMatchers(HttpMethod.POST, "/users", "/users/login")
                     .permitAll()
-                    .requestMatchers(HttpMethod.GET, "/articles/**", "/profiles/**", "/tags")
+.requestMatchers(HttpMethod.GET, "/articles/**", "/profiles/**", "/tags")
+                    .permitAll()
+                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated());
