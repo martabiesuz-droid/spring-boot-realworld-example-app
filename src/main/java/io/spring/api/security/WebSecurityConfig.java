@@ -54,7 +54,9 @@ public class WebSecurityConfig {
                     .permitAll()
 .requestMatchers(HttpMethod.GET, "/articles/**", "/profiles/**", "/tags")
                     .permitAll()
-                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**")
+.requestMatchers("/swagger-ui/**", "/v3/api-docs/**")
+                    .permitAll()
+                    .requestMatchers("/actuator/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated());

@@ -1,0 +1,117 @@
+{
+  "__inputs": [],
+  "__requires": [],
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "unit": "reqps" },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "options": { "legend": { "calcs": [], "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "single" } },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "rate(http_server_requests_seconds_count{application=\"realworld-java\"}[1m])",
+          "legendFormat": "{{uri}} {{method}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Requests por Endpoint (por segundo)",
+      "description": "Mostra quantas requisicoes por segundo cada endpoint esta recebendo. Picos indicam momentos de maior uso.",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "unit": "s" },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "options": { "legend": { "calcs": [], "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "single" } },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "histogram_quantile(0.95, rate(http_server_requests_seconds_bucket{application=\"realworld-java\"}[1m]))",
+          "legendFormat": "p95 {{uri}}",
+          "refId": "A"
+        }
+      ],
+"title": "Tempo de Resposta por Endpoint (segundos)",
+      "description": "Mostra o tempo que a API leva para responder cada endpoint. 95% das requisicoes ficam abaixo desta linha. Valores acima de 1s indicam lentidao.",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "unit": "short",
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "green", "value": null },
+            { "color": "yellow", "value": 100 },
+            { "color": "red", "value": 500 }
+          ]}
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 8 },
+      "id": 3,
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "orientation": "auto", "textMode": "auto", "colorMode": "background" },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "sum(http_server_requests_seconds_count{application=\"realworld-java\", outcome=\"SUCCESS\"})",
+          "legendFormat": "Total Sucesso",
+          "refId": "A"
+        }
+      ],
+      "title": "Total de Requisicoes com Sucesso",
+      "description": "Numero total de requisicoes bem-sucedidas desde que a aplicacao iniciou.",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "unit": "short",
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "green", "value": null },
+            { "color": "yellow", "value": 1 },
+            { "color": "red", "value": 10 }
+          ]}
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 8 },
+      "id": 4,
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "orientation": "auto", "textMode": "auto", "colorMode": "background" },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "sum(http_server_requests_seconds_count{application=\"realworld-java\", outcome=\"SERVER_ERROR\"})",
+          "legendFormat": "Total Erros",
+          "refId": "A"
+        }
+      ],
+      "title": "Total de Erros (5xx)",
+      "description": "Numero de erros internos do servidor. Verde = zero erros. Vermelho = problema.",
+      "type": "stat"
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "tags": ["realworld", "java"],
+  "time": { "from": "now-15m", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "RealWorld Java API",
+  "uid": "realworld-java",
+  "version": 1
+}
