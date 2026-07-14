@@ -3,16 +3,20 @@ package io.spring.application.tag;
 import io.spring.application.TagsQueryService;
 import io.spring.core.article.Article;
 import io.spring.core.article.ArticleRepository;
-import io.spring.infrastructure.DbTestBase;
-import io.spring.infrastructure.repository.MyBatisArticleRepository;
 import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-@Import({TagsQueryService.class, MyBatisArticleRepository.class})
-public class TagsQueryServiceTest extends DbTestBase {
+@ActiveProfiles("test")
+@SpringBootTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
+public class TagsQueryServiceTest {
   @Autowired private TagsQueryService tagsQueryService;
 
   @Autowired private ArticleRepository articleRepository;

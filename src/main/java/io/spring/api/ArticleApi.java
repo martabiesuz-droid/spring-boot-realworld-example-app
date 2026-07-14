@@ -10,9 +10,15 @@ import io.spring.core.article.Article;
 import io.spring.core.article.ArticleRepository;
 import io.spring.core.service.AuthorizationService;
 import io.spring.core.user.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
-import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,11 +33,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/articles/{slug}")
 @AllArgsConstructor
+@Tag(name = "Article")
 public class ArticleApi {
   private ArticleQueryService articleQueryService;
   private ArticleRepository articleRepository;
   private ArticleCommandService articleCommandService;
 
+  @Operation(summary = "Get an article by slug")
+  @ApiResponse(responseCode = "200", description = "Article found", content = @Content(schema = @Schema(implementation = ArticleData.class)))
+  @ApiResponse(responseCode = "404", description = "Article not found")
   @GetMapping
   public ResponseEntity<?> article(
       @PathVariable("slug") String slug, @AuthenticationPrincipal User user) {
@@ -41,6 +51,10 @@ public class ArticleApi {
         .orElseThrow(ResourceNotFoundException::new);
   }
 
+  @Operation(summary = "Update an article")
+  @ApiResponse(responseCode = "200", description = "Article updated", content = @Content(schema = @Schema(implementation = ArticleData.class)))
+  @ApiResponse(responseCode = "403", description = "Not authorized to edit this article")
+  @ApiResponse(responseCode = "404", description = "Article not found")
   @PutMapping
   public ResponseEntity<?> updateArticle(
       @PathVariable("slug") String slug,
@@ -62,6 +76,10 @@ public class ArticleApi {
         .orElseThrow(ResourceNotFoundException::new);
   }
 
+  @Operation(summary = "Delete an article")
+  @ApiResponse(responseCode = "204", description = "Article deleted")
+  @ApiResponse(responseCode = "403", description = "Not authorized to delete this article")
+  @ApiResponse(responseCode = "404", description = "Article not found")
   @DeleteMapping
   public ResponseEntity deleteArticle(
       @PathVariable("slug") String slug, @AuthenticationPrincipal User user) {

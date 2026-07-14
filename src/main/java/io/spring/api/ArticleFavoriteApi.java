@@ -8,6 +8,11 @@ import io.spring.core.article.ArticleRepository;
 import io.spring.core.favorite.ArticleFavorite;
 import io.spring.core.favorite.ArticleFavoriteRepository;
 import io.spring.core.user.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.HashMap;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +26,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "articles/{slug}/favorite")
 @AllArgsConstructor
+@Tag(name = "ArticleFavorite")
 public class ArticleFavoriteApi {
   private ArticleFavoriteRepository articleFavoriteRepository;
   private ArticleRepository articleRepository;
   private ArticleQueryService articleQueryService;
 
+@Operation(summary = "Favorite an article")
+  @ApiResponse(responseCode = "200", description = "Article favorited", content = @Content(schema = @Schema(implementation = ArticleData.class)))
+  @ApiResponse(responseCode = "404", description = "Article not found")
   @PostMapping
   public ResponseEntity favoriteArticle(
       @PathVariable("slug") String slug, @AuthenticationPrincipal User user) {
@@ -36,6 +45,9 @@ public class ArticleFavoriteApi {
     return responseArticleData(articleQueryService.findBySlug(slug, user).get());
   }
 
+@Operation(summary = "Unfavorite an article")
+  @ApiResponse(responseCode = "200", description = "Article unfavorited", content = @Content(schema = @Schema(implementation = ArticleData.class)))
+  @ApiResponse(responseCode = "404", description = "Article not found")
   @DeleteMapping
   public ResponseEntity unfavoriteArticle(
       @PathVariable("slug") String slug, @AuthenticationPrincipal User user) {

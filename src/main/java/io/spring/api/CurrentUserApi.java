@@ -7,9 +7,14 @@ import io.spring.application.user.UpdateUserCommand;
 import io.spring.application.user.UpdateUserParam;
 import io.spring.application.user.UserService;
 import io.spring.core.user.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
-import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,11 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/user")
 @AllArgsConstructor
+@Tag(name = "CurrentUser")
 public class CurrentUserApi {
 
   private UserQueryService userQueryService;
   private UserService userService;
 
+@Operation(summary = "Get current user")
+  @ApiResponse(responseCode = "200", description = "Current user retrieved", content = @Content(schema = @Schema(implementation = UserWithToken.class)))
   @GetMapping
   public ResponseEntity currentUser(
       @AuthenticationPrincipal User currentUser,
@@ -37,6 +45,8 @@ public class CurrentUserApi {
         userResponse(new UserWithToken(userData, authorization.split(" ")[1])));
   }
 
+@Operation(summary = "Update current user")
+  @ApiResponse(responseCode = "200", description = "User updated", content = @Content(schema = @Schema(implementation = UserWithToken.class)))
   @PutMapping
   public ResponseEntity updateProfile(
       @AuthenticationPrincipal User currentUser,

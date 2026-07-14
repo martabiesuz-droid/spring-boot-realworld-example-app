@@ -16,6 +16,7 @@
         A.body articleBody,
         A.created_at articleCreatedAt,
         A.updated_at articleUpdatedAt,
+        A.reading_time articleReadingTime,
         T.name tagName,
         <include refid="profileColumns"/>
         from
@@ -38,17 +39,18 @@
 
     <select id="findById" resultMap="transfer.data.articleData">
         <include refid="selectArticleData"/>
-        where A.id = #{id}
+        where A.id = #{id} and A.is_deleted = false
     </select>
     <select id="findBySlug" resultMap="transfer.data.articleData">
         <include refid="selectArticleData"/>
-        where A.slug = #{slug}
+        where A.slug = #{slug} and A.is_deleted = false
     </select>
     <select id="queryArticles" resultMap="articleId">
         <include refid="selectArticleIds" />
         <where>
+            A.is_deleted = false
             <if test="tag != null">
-                T.name = #{tag}
+                AND T.name = #{tag}
             </if>
             <if test="author != null">
                 AND AU.username = #{author}
@@ -71,8 +73,9 @@
         left join users AU on AU.id = A.user_id
         left join users AFU on AFU.id = AF.user_id
         <where>
+            A.is_deleted = false
             <if test="tag != null">
-                T.name = #{tag}
+                AND T.name = #{tag}
             </if>
             <if test="author != null">
                 AND AU.username = #{author}
@@ -84,7 +87,7 @@
     </select>
     <select id="findArticles" resultMap="transfer.data.articleData">
         <include refid="selectArticleData"/>
-        where A.id in
+        where A.is_deleted = false and A.id in
         <foreach index="index" collection="articleIds" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -92,14 +95,14 @@
     </select>
     <select id="findArticlesOfAuthors" resultMap="transfer.data.articleData">
         <include refid="selectArticleData"/>
-        where A.user_id in
+        where A.is_deleted = false and A.user_id in
         <foreach index="index" collection="authors" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
         limit #{page.offset}, #{page.limit}
     </select>
     <select id="countFeedSize" resultType="java.lang.Integer">
-        select count(1) from articles A where A.user_id in
+        select count(1) from articles A where A.is_deleted = false and A.user_id in
         <foreach collection="authors" item="id" open="(" close=")" separator=",">
             #{id}
         </foreach>
@@ -107,8 +110,9 @@
     <select id="findArticlesWithCursor" resultType="java.lang.String">
         <include refid="selectArticleIds" />
         <where>
+            A.is_deleted = false
             <if test="tag != null">
-                T.name = #{tag}
+                AND T.name = #{tag}
             </if>
             <if test="author != null">
                 AND AU.username = #{author}
@@ -134,7 +138,8 @@
     <select id="findArticlesOfAuthorsWithCursor" resultMap="transfer.data.articleData">
         <include refid="selectArticleData"/>
         <where>
-        A.user_id in
+        A.is_deleted = false
+        AND A.user_id in
         <foreach index="index" collection="authors" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -23,6 +23,7 @@
         <result column="articleBody" property="body"/>
         <result column="articleCreatedAt" property="createdAt"/>
         <result column="articleUpdatedAt" property="updatedAt"/>
+        <result column="articleReadingTime" property="readingTime"/>
         <association property="profileData" resultMap="transfer.data.profileData"/>
         <collection property="tagList" javaType="list" ofType="string">
             <result column="tagName"/>

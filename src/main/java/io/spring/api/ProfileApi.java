@@ -6,6 +6,11 @@ import io.spring.application.data.ProfileData;
 import io.spring.core.user.FollowRelation;
 import io.spring.core.user.User;
 import io.spring.core.user.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.HashMap;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -21,10 +26,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "profiles/{username}")
 @AllArgsConstructor
+@Tag(name = "Profile")
 public class ProfileApi {
   private ProfileQueryService profileQueryService;
   private UserRepository userRepository;
 
+@Operation(summary = "Get a profile")
+  @ApiResponse(responseCode = "200", description = "Profile found", content = @Content(schema = @Schema(implementation = ProfileData.class)))
+  @ApiResponse(responseCode = "404", description = "Profile not found")
   @GetMapping
   public ResponseEntity getProfile(
       @PathVariable("username") String username, @AuthenticationPrincipal User user) {
@@ -34,6 +43,9 @@ public class ProfileApi {
         .orElseThrow(ResourceNotFoundException::new);
   }
 
+@Operation(summary = "Follow a user")
+  @ApiResponse(responseCode = "200", description = "User followed", content = @Content(schema = @Schema(implementation = ProfileData.class)))
+  @ApiResponse(responseCode = "404", description = "User not found")
   @PostMapping(path = "follow")
   public ResponseEntity follow(
       @PathVariable("username") String username, @AuthenticationPrincipal User user) {
@@ -48,6 +60,9 @@ public class ProfileApi {
         .orElseThrow(ResourceNotFoundException::new);
   }
 
+@Operation(summary = "Unfollow a user")
+  @ApiResponse(responseCode = "200", description = "User unfollowed", content = @Content(schema = @Schema(implementation = ProfileData.class)))
+  @ApiResponse(responseCode = "404", description = "User not found")
   @DeleteMapping(path = "follow")
   public ResponseEntity unfollow(
       @PathVariable("username") String username, @AuthenticationPrincipal User user) {

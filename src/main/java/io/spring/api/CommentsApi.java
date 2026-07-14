@@ -11,11 +11,17 @@ import io.spring.core.comment.Comment;
 import io.spring.core.comment.CommentRepository;
 import io.spring.core.service.AuthorizationService;
 import io.spring.core.user.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,11 +38,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/articles/{slug}/comments")
 @AllArgsConstructor
+@Tag(name = "Comments")
 public class CommentsApi {
   private ArticleRepository articleRepository;
   private CommentRepository commentRepository;
   private CommentQueryService commentQueryService;
 
+@Operation(summary = "Create a comment")
+  @ApiResponse(responseCode = "201", description = "Comment created", content = @Content(schema = @Schema(implementation = CommentData.class)))
+  @ApiResponse(responseCode = "404", description = "Article not found")
   @PostMapping
   public ResponseEntity<?> createComment(
       @PathVariable("slug") String slug,
@@ -50,6 +60,9 @@ public class CommentsApi {
         .body(commentResponse(commentQueryService.findById(comment.getId(), user).get()));
   }
 
+@Operation(summary = "Get comments")
+  @ApiResponse(responseCode = "200", description = "Comments retrieved", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentData.class))))
+  @ApiResponse(responseCode = "404", description = "Article not found")
   @GetMapping
   public ResponseEntity getComments(
       @PathVariable("slug") String slug, @AuthenticationPrincipal User user) {
@@ -64,6 +77,10 @@ public class CommentsApi {
         });
   }
 
+@Operation(summary = "Delete a comment")
+  @ApiResponse(responseCode = "204", description = "Comment deleted")
+  @ApiResponse(responseCode = "403", description = "Not authorized to delete this comment")
+  @ApiResponse(responseCode = "404", description = "Comment not found")
   @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
   public ResponseEntity deleteComment(
       @PathVariable("slug") String slug,

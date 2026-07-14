@@ -5,19 +5,23 @@ import io.spring.core.article.ArticleRepository;
 import io.spring.core.article.Tag;
 import io.spring.core.user.User;
 import io.spring.core.user.UserRepository;
-import io.spring.infrastructure.DbTestBase;
-import io.spring.infrastructure.repository.MyBatisArticleRepository;
-import io.spring.infrastructure.repository.MyBatisUserRepository;
 import java.util.Arrays;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-@Import({MyBatisArticleRepository.class, MyBatisUserRepository.class})
-public class MyBatisArticleRepositoryTest extends DbTestBase {
+@ActiveProfiles("test")
+@SpringBootTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
+public class MyBatisArticleRepositoryTest {
+
   @Autowired private ArticleRepository articleRepository;
 
   @Autowired private UserRepository userRepository;
@@ -26,9 +30,10 @@ public class MyBatisArticleRepositoryTest extends DbTestBase {
 
   @BeforeEach
   public void setUp() {
-    User user = new User("aisensiy@gmail.com", "aisensiy", "123", "bio", "default");
+    String uniq = String.valueOf(System.nanoTime());
+    User user = new User("aisensiy" + uniq + "@gmail.com", "aisensiy" + uniq, "123", "bio", "default");
     userRepository.save(user);
-    article = new Article("test", "desc", "body", Arrays.asList("java", "spring"), user.getId());
+    article = new Article("test" + uniq, "desc", "body", Arrays.asList("java", "spring"), user.getId());
   }
 
   @Test
