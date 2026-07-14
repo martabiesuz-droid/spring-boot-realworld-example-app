@@ -3,8 +3,8 @@ package io.spring.core.article;
 import static java.util.stream.Collectors.toList;
 
 import io.spring.Util;
-import io.spring.core.AbstractPersistableEntity;
 import io.spring.application.ReadingTime;
+import io.spring.core.AbstractPersistableEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,7 +27,9 @@ import org.hibernate.annotations.SQLRestriction;
 @Table(name = "articles")
 @Getter
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"}, callSuper = false)
+@EqualsAndHashCode(
+    of = {"id"},
+    callSuper = false)
 @SQLDelete(sql = "UPDATE articles SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 public class Article extends AbstractPersistableEntity {

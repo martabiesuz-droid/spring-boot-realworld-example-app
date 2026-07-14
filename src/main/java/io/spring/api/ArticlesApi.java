@@ -32,8 +32,11 @@ public class ArticlesApi {
   private ArticleCommandService articleCommandService;
   private ArticleQueryService articleQueryService;
 
-@Operation(summary = "Create an article")
-  @ApiResponse(responseCode = "200", description = "Article created", content = @Content(schema = @Schema(implementation = ArticleData.class)))
+  @Operation(summary = "Create an article")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Article created",
+      content = @Content(schema = @Schema(implementation = ArticleData.class)))
   @PostMapping
   public ResponseEntity createArticle(
       @Valid @RequestBody NewArticleParam newArticleParam, @AuthenticationPrincipal User user) {
@@ -46,7 +49,7 @@ public class ArticlesApi {
         });
   }
 
-@Operation(summary = "Get user feed")
+  @Operation(summary = "Get user feed")
   @ApiResponse(responseCode = "200", description = "Feed retrieved")
   @GetMapping(path = "feed")
   public ResponseEntity getFeed(
@@ -56,7 +59,7 @@ public class ArticlesApi {
     return ResponseEntity.ok(articleQueryService.findUserFeed(user, new Page(offset, limit)));
   }
 
-@Operation(summary = "Get articles")
+  @Operation(summary = "Get articles")
   @ApiResponse(responseCode = "200", description = "Articles retrieved")
   @GetMapping
   public ResponseEntity getArticles(

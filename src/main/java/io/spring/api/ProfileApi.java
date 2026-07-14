@@ -31,8 +31,11 @@ public class ProfileApi {
   private ProfileQueryService profileQueryService;
   private UserRepository userRepository;
 
-@Operation(summary = "Get a profile")
-  @ApiResponse(responseCode = "200", description = "Profile found", content = @Content(schema = @Schema(implementation = ProfileData.class)))
+  @Operation(summary = "Get a profile")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Profile found",
+      content = @Content(schema = @Schema(implementation = ProfileData.class)))
   @ApiResponse(responseCode = "404", description = "Profile not found")
   @GetMapping
   public ResponseEntity getProfile(
@@ -43,8 +46,11 @@ public class ProfileApi {
         .orElseThrow(ResourceNotFoundException::new);
   }
 
-@Operation(summary = "Follow a user")
-  @ApiResponse(responseCode = "200", description = "User followed", content = @Content(schema = @Schema(implementation = ProfileData.class)))
+  @Operation(summary = "Follow a user")
+  @ApiResponse(
+      responseCode = "200",
+      description = "User followed",
+      content = @Content(schema = @Schema(implementation = ProfileData.class)))
   @ApiResponse(responseCode = "404", description = "User not found")
   @PostMapping(path = "follow")
   public ResponseEntity follow(
@@ -60,8 +66,11 @@ public class ProfileApi {
         .orElseThrow(ResourceNotFoundException::new);
   }
 
-@Operation(summary = "Unfollow a user")
-  @ApiResponse(responseCode = "200", description = "User unfollowed", content = @Content(schema = @Schema(implementation = ProfileData.class)))
+  @Operation(summary = "Unfollow a user")
+  @ApiResponse(
+      responseCode = "200",
+      description = "User unfollowed",
+      content = @Content(schema = @Schema(implementation = ProfileData.class)))
   @ApiResponse(responseCode = "404", description = "User not found")
   @DeleteMapping(path = "follow")
   public ResponseEntity unfollow(

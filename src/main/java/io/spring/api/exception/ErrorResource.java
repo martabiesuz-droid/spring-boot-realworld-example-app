@@ -11,7 +11,8 @@ public class ErrorResource {
   public ErrorResource(List<FieldErrorResource> fieldErrors) {
     this.errors = new HashMap<>();
     for (FieldErrorResource fieldError : fieldErrors) {
-      errors.computeIfAbsent(fieldError.getField(), key -> new ArrayList<>())
+      errors
+          .computeIfAbsent(fieldError.getField(), key -> new ArrayList<>())
           .add(fieldError.getMessage());
     }
   }

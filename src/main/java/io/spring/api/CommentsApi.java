@@ -44,8 +44,11 @@ public class CommentsApi {
   private CommentRepository commentRepository;
   private CommentQueryService commentQueryService;
 
-@Operation(summary = "Create a comment")
-  @ApiResponse(responseCode = "201", description = "Comment created", content = @Content(schema = @Schema(implementation = CommentData.class)))
+  @Operation(summary = "Create a comment")
+  @ApiResponse(
+      responseCode = "201",
+      description = "Comment created",
+      content = @Content(schema = @Schema(implementation = CommentData.class)))
   @ApiResponse(responseCode = "404", description = "Article not found")
   @PostMapping
   public ResponseEntity<?> createComment(
@@ -60,8 +63,12 @@ public class CommentsApi {
         .body(commentResponse(commentQueryService.findById(comment.getId(), user).get()));
   }
 
-@Operation(summary = "Get comments")
-  @ApiResponse(responseCode = "200", description = "Comments retrieved", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentData.class))))
+  @Operation(summary = "Get comments")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Comments retrieved",
+      content =
+          @Content(array = @ArraySchema(schema = @Schema(implementation = CommentData.class))))
   @ApiResponse(responseCode = "404", description = "Article not found")
   @GetMapping
   public ResponseEntity getComments(
@@ -77,7 +84,7 @@ public class CommentsApi {
         });
   }
 
-@Operation(summary = "Delete a comment")
+  @Operation(summary = "Delete a comment")
   @ApiResponse(responseCode = "204", description = "Comment deleted")
   @ApiResponse(responseCode = "403", description = "Not authorized to delete this comment")
   @ApiResponse(responseCode = "404", description = "Comment not found")

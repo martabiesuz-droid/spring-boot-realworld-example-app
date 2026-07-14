@@ -1,5 +1,8 @@
 package io.spring.infrastructure.service;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import io.spring.core.service.JwtService;
 import io.spring.core.user.User;
 import java.nio.charset.StandardCharsets;
@@ -8,9 +11,6 @@ import javax.crypto.SecretKey;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 
 public class DefaultJwtServiceTest {
 
@@ -38,7 +38,7 @@ public class DefaultJwtServiceTest {
     Assertions.assertFalse(optional.isPresent());
   }
 
-@Test
+  @Test
   public void should_get_null_with_expired_jwt() {
     String token =
         "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhaXNlbnNpeSIsImV4cCI6MTUwMjE2MTIwNH0.SJB-U60WzxLYNomqLo4G3v3LzFxJKuVrIud8D8Lz3-mgpo9pN1i7C8ikU_jQPJGm8HsC1CquGMI-rSuM7j6LDA";
@@ -50,12 +50,17 @@ public class DefaultJwtServiceTest {
     User user = new User("email@email.com", "username", "123", "", "");
     String token = jwtService.toToken(user);
 
-    SecretKey key = Keys.hmacShaKeyFor("123123123123123123123123123123123123123123123123123123123123".getBytes(StandardCharsets.UTF_8));
+    SecretKey key =
+        Keys.hmacShaKeyFor(
+            "123123123123123123123123123123123123123123123123123123123123"
+                .getBytes(StandardCharsets.UTF_8));
     Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
 
     Assertions.assertNotNull(claims.getExpiration());
     long expectedExpirationSeconds = (System.currentTimeMillis() / 1000) + 3600;
     long actualExpirationSeconds = claims.getExpiration().getTime() / 1000;
-    Assertions.assertTrue(Math.abs(expectedExpirationSeconds - actualExpirationSeconds) < 5, "Expiration deve estar por volta de 3600 segundos no futuro");
+    Assertions.assertTrue(
+        Math.abs(expectedExpirationSeconds - actualExpirationSeconds) < 5,
+        "Expiration deve estar por volta de 3600 segundos no futuro");
   }
 }

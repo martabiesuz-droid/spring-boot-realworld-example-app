@@ -35,9 +35,7 @@ public class JpaArticleRepository implements ArticleRepository {
     List<Tag> managedTags = new ArrayList<>();
     for (Tag tag : originalTags) {
       Tag managedTag =
-          tagJpaRepository
-              .findByName(tag.getName())
-              .orElseGet(() -> tagJpaRepository.save(tag));
+          tagJpaRepository.findByName(tag.getName()).orElseGet(() -> tagJpaRepository.save(tag));
       managedTags.add(managedTag);
     }
     originalTags.clear();

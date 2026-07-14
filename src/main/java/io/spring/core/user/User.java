@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"}, callSuper = false)
+@EqualsAndHashCode(
+    of = {"id"},
+    callSuper = false)
 public class User extends AbstractPersistableEntity {
 
   @Id private String id;

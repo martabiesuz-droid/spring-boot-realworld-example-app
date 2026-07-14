@@ -42,8 +42,11 @@ public class UsersApi {
   private JwtService jwtService;
   private UserService userService;
 
-@Operation(summary = "Register a new user")
-  @ApiResponse(responseCode = "201", description = "User registered", content = @Content(schema = @Schema(implementation = UserWithToken.class)))
+  @Operation(summary = "Register a new user")
+  @ApiResponse(
+      responseCode = "201",
+      description = "User registered",
+      content = @Content(schema = @Schema(implementation = UserWithToken.class)))
   @RequestMapping(path = "/users", method = POST)
   public ResponseEntity createUser(@Valid @RequestBody RegisterParam registerParam) {
     User user = userService.createUser(registerParam);
@@ -52,8 +55,11 @@ public class UsersApi {
         .body(userResponse(new UserWithToken(userData, jwtService.toToken(user))));
   }
 
-@Operation(summary = "Login user")
-  @ApiResponse(responseCode = "200", description = "Login successful", content = @Content(schema = @Schema(implementation = UserWithToken.class)))
+  @Operation(summary = "Login user")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Login successful",
+      content = @Content(schema = @Schema(implementation = UserWithToken.class)))
   @ApiResponse(responseCode = "401", description = "Invalid credentials")
   @RequestMapping(path = "/users/login", method = POST)
   public ResponseEntity userLogin(@Valid @RequestBody LoginParam loginParam) {

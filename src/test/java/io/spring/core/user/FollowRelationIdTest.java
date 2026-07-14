@@ -46,7 +46,7 @@ public class FollowRelationIdTest {
     assertNotEquals(id1, id2);
   }
 
-@Test
+  @Test
   void should_have_same_hashCode_for_equal_objects() {
     FollowRelationId id1 = new FollowRelationId("u1", "t1");
     FollowRelationId id2 = new FollowRelationId("u1", "t1");

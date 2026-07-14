@@ -12,8 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
-
-import org.apache.ibatis.type.JdbcType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,11 +21,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class DateTimeHandlerTest {
 
-  @Mock
-  private PreparedStatement mockPs;
+  @Mock private PreparedStatement mockPs;
 
-  @Mock
-  private ResultSet mockRs;
+  @Mock private ResultSet mockRs;
 
   private DateTimeHandler handler;
 
@@ -50,7 +46,8 @@ public class DateTimeHandlerTest {
   }
 
   @Test
-  public void should_return_instant_when_timestamp_is_not_null_by_column_name() throws SQLException {
+  public void should_return_instant_when_timestamp_is_not_null_by_column_name()
+      throws SQLException {
     Instant expectedInstant = Instant.now();
     when(mockRs.getTimestamp(eq("created_at"), any(java.util.Calendar.class)))
         .thenReturn(Timestamp.from(expectedInstant));
@@ -70,7 +67,8 @@ public class DateTimeHandlerTest {
   }
 
   @Test
-  public void should_return_instant_when_timestamp_is_not_null_by_column_index() throws SQLException {
+  public void should_return_instant_when_timestamp_is_not_null_by_column_index()
+      throws SQLException {
     Instant expectedInstant = Instant.now();
     when(mockRs.getTimestamp(eq(1), any(java.util.Calendar.class)))
         .thenReturn(Timestamp.from(expectedInstant));

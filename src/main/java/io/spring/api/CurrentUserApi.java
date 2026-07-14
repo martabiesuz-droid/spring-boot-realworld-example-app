@@ -34,8 +34,11 @@ public class CurrentUserApi {
   private UserQueryService userQueryService;
   private UserService userService;
 
-@Operation(summary = "Get current user")
-  @ApiResponse(responseCode = "200", description = "Current user retrieved", content = @Content(schema = @Schema(implementation = UserWithToken.class)))
+  @Operation(summary = "Get current user")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Current user retrieved",
+      content = @Content(schema = @Schema(implementation = UserWithToken.class)))
   @GetMapping
   public ResponseEntity currentUser(
       @AuthenticationPrincipal User currentUser,
@@ -45,8 +48,11 @@ public class CurrentUserApi {
         userResponse(new UserWithToken(userData, authorization.split(" ")[1])));
   }
 
-@Operation(summary = "Update current user")
-  @ApiResponse(responseCode = "200", description = "User updated", content = @Content(schema = @Schema(implementation = UserWithToken.class)))
+  @Operation(summary = "Update current user")
+  @ApiResponse(
+      responseCode = "200",
+      description = "User updated",
+      content = @Content(schema = @Schema(implementation = UserWithToken.class)))
   @PutMapping
   public ResponseEntity updateProfile(
       @AuthenticationPrincipal User currentUser,

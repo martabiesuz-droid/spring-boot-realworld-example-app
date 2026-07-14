@@ -11,7 +11,6 @@ import io.spring.core.article.ArticleRepository;
 import io.spring.core.service.AuthorizationService;
 import io.spring.core.user.User;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -40,7 +39,10 @@ public class ArticleApi {
   private ArticleCommandService articleCommandService;
 
   @Operation(summary = "Get an article by slug")
-  @ApiResponse(responseCode = "200", description = "Article found", content = @Content(schema = @Schema(implementation = ArticleData.class)))
+  @ApiResponse(
+      responseCode = "200",
+      description = "Article found",
+      content = @Content(schema = @Schema(implementation = ArticleData.class)))
   @ApiResponse(responseCode = "404", description = "Article not found")
   @GetMapping
   public ResponseEntity<?> article(
@@ -52,7 +54,10 @@ public class ArticleApi {
   }
 
   @Operation(summary = "Update an article")
-  @ApiResponse(responseCode = "200", description = "Article updated", content = @Content(schema = @Schema(implementation = ArticleData.class)))
+  @ApiResponse(
+      responseCode = "200",
+      description = "Article updated",
+      content = @Content(schema = @Schema(implementation = ArticleData.class)))
   @ApiResponse(responseCode = "403", description = "Not authorized to edit this article")
   @ApiResponse(responseCode = "404", description = "Article not found")
   @PutMapping

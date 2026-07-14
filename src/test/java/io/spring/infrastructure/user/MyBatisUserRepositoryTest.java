@@ -59,7 +59,13 @@ public class MyBatisUserRepositoryTest {
 
   @Test
   public void should_create_new_user_follow_success() {
-    User other = new User("other" + System.nanoTime() + "@example.com", "other" + System.nanoTime(), "123", "", "");
+    User other =
+        new User(
+            "other" + System.nanoTime() + "@example.com",
+            "other" + System.nanoTime(),
+            "123",
+            "",
+            "");
     userRepository.save(other);
 
     FollowRelation followRelation = new FollowRelation(user.getId(), other.getId());
@@ -67,9 +73,15 @@ public class MyBatisUserRepositoryTest {
     Assertions.assertTrue(userRepository.findRelation(user.getId(), other.getId()).isPresent());
   }
 
-@Test
+  @Test
   public void should_unfollow_user_success() {
-    User other = new User("other" + System.nanoTime() + "@example.com", "other" + System.nanoTime(), "123", "", "");
+    User other =
+        new User(
+            "other" + System.nanoTime() + "@example.com",
+            "other" + System.nanoTime(),
+            "123",
+            "",
+            "");
     userRepository.save(other);
 
     FollowRelation followRelation = new FollowRelation(user.getId(), other.getId());
@@ -81,19 +93,25 @@ public class MyBatisUserRepositoryTest {
 
   @Test
   public void should_actually_delete_relation_from_database_after_unfollow() {
-    User other = new User("other" + System.nanoTime() + "@example.com", "other" + System.nanoTime(), "123", "", "");
+    User other =
+        new User(
+            "other" + System.nanoTime() + "@example.com",
+            "other" + System.nanoTime(),
+            "123",
+            "",
+            "");
     userRepository.save(other);
     FollowRelation followRelation = new FollowRelation(user.getId(), other.getId());
     userRepository.saveRelation(followRelation);
 
     userRepository.removeRelation(followRelation);
 
-    Integer count = jdbcTemplate.queryForObject(
-        "SELECT COUNT(*) FROM follows WHERE user_id = ? AND follow_id = ?",
-        Integer.class,
-        user.getId(),
-        other.getId()
-    );
+    Integer count =
+        jdbcTemplate.queryForObject(
+            "SELECT COUNT(*) FROM follows WHERE user_id = ? AND follow_id = ?",
+            Integer.class,
+            user.getId(),
+            other.getId());
     Assertions.assertEquals(0, count);
   }
 }

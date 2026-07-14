@@ -32,8 +32,11 @@ public class ArticleFavoriteApi {
   private ArticleRepository articleRepository;
   private ArticleQueryService articleQueryService;
 
-@Operation(summary = "Favorite an article")
-  @ApiResponse(responseCode = "200", description = "Article favorited", content = @Content(schema = @Schema(implementation = ArticleData.class)))
+  @Operation(summary = "Favorite an article")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Article favorited",
+      content = @Content(schema = @Schema(implementation = ArticleData.class)))
   @ApiResponse(responseCode = "404", description = "Article not found")
   @PostMapping
   public ResponseEntity favoriteArticle(
@@ -45,8 +48,11 @@ public class ArticleFavoriteApi {
     return responseArticleData(articleQueryService.findBySlug(slug, user).get());
   }
 
-@Operation(summary = "Unfavorite an article")
-  @ApiResponse(responseCode = "200", description = "Article unfavorited", content = @Content(schema = @Schema(implementation = ArticleData.class)))
+  @Operation(summary = "Unfavorite an article")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Article unfavorited",
+      content = @Content(schema = @Schema(implementation = ArticleData.class)))
   @ApiResponse(responseCode = "404", description = "Article not found")
   @DeleteMapping
   public ResponseEntity unfavoriteArticle(

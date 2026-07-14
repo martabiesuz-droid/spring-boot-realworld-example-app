@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +21,7 @@ public class InstantConverterTest {
   public void should_convert_timestamp_to_instant_when_not_null() {
     Timestamp ts = Timestamp.from(Instant.now());
     Instant result = converter.convertToEntityAttribute(ts);
-    
+
     assertThat(result).isNotNull();
     assertThat(result).isEqualTo(ts.toInstant());
   }
@@ -30,7 +29,7 @@ public class InstantConverterTest {
   @Test
   public void should_return_null_when_timestamp_is_null() {
     Instant result = converter.convertToEntityAttribute(null);
-    
+
     assertNull(result);
   }
 }

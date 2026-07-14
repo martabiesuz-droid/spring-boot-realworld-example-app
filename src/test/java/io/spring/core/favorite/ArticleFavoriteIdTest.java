@@ -46,7 +46,7 @@ public class ArticleFavoriteIdTest {
     assertNotEquals(id1, id2);
   }
 
-@Test
+  @Test
   void should_have_same_hashCode_for_equal_objects() {
     ArticleFavoriteId id1 = new ArticleFavoriteId("a1", "u1");
     ArticleFavoriteId id2 = new ArticleFavoriteId("a1", "u1");
