@@ -21,7 +21,7 @@ public class ProfileQueryServiceTest {
   @Autowired private ProfileQueryService profileQueryService;
   @Autowired private UserRepository userRepository;
 
-  @Test
+@Test
   public void should_fetch_profile_success() {
     User currentUser = new User("a@test.com", "a", "123", "", "");
     User profileUser = new User("p@test.com", "p", "123", "", "");
@@ -31,4 +31,6 @@ public class ProfileQueryServiceTest {
         profileQueryService.findByUsername(profileUser.getUsername(), currentUser);
     Assertions.assertTrue(optional.isPresent());
   }
+
+
 }

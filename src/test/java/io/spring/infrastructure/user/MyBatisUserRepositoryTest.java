@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MyBatisUserRepositoryTest {
 
   @Autowired private UserRepository userRepository;
+  @Autowired private JdbcTemplate jdbcTemplate;
   private User user;
 
   @BeforeEach
@@ -65,7 +67,7 @@ public class MyBatisUserRepositoryTest {
     Assertions.assertTrue(userRepository.findRelation(user.getId(), other.getId()).isPresent());
   }
 
-  @Test
+@Test
   public void should_unfollow_user_success() {
     User other = new User("other" + System.nanoTime() + "@example.com", "other" + System.nanoTime(), "123", "", "");
     userRepository.save(other);
@@ -75,5 +77,23 @@ public class MyBatisUserRepositoryTest {
 
     userRepository.removeRelation(followRelation);
     Assertions.assertFalse(userRepository.findRelation(user.getId(), other.getId()).isPresent());
+  }
+
+  @Test
+  public void should_actually_delete_relation_from_database_after_unfollow() {
+    User other = new User("other" + System.nanoTime() + "@example.com", "other" + System.nanoTime(), "123", "", "");
+    userRepository.save(other);
+    FollowRelation followRelation = new FollowRelation(user.getId(), other.getId());
+    userRepository.saveRelation(followRelation);
+
+    userRepository.removeRelation(followRelation);
+
+    Integer count = jdbcTemplate.queryForObject(
+        "SELECT COUNT(*) FROM follows WHERE user_id = ? AND follow_id = ?",
+        Integer.class,
+        user.getId(),
+        other.getId()
+    );
+    Assertions.assertEquals(0, count);
   }
 }

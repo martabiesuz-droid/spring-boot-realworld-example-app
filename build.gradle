@@ -3,7 +3,8 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.7'
     id 'java'
     id "com.netflix.dgs.codegen" version "8.5.0"
-    id "com.diffplug.spotless" version "8.0.0"
+id "com.diffplug.spotless" version "8.0.0"
+id "info.solidsoft.pitest" version "1.19.0"
 }
 
 version = '0.0.1-SNAPSHOT'
@@ -82,4 +83,16 @@ tasks.named('clean') {
 tasks.named('generateJava') {
     schemaPaths = ["${projectDir}/src/main/resources/schema"]
     packageName = 'io.spring.graphql'
+}
+
+pitest {
+    junit5PluginVersion = '1.2.1'
+    targetClasses = ['io.spring.application.*', 'io.spring.core.*', 'io.spring.infrastructure.*']
+    targetTests = ['io.spring.application.*', 'io.spring.core.*', 'io.spring.infrastructure.*', 'io.spring.jpa.*']
+    threads = 4
+    outputFormats = ['HTML', 'XML']
+    mutationThreshold = 0
+    coverageThreshold = 0
+    timestampedReports = false
+reportDir = layout.buildDirectory.dir('reports/pitest').get()
 }
